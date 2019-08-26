@@ -8,9 +8,9 @@ def change_res(cap, width, height):
     cap.set(4, height)
 
 
-change_res(cap, 640, 480)
+change_res(cap, 1280, 720)
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
+out = cv2.VideoWriter('output1.avi',fourcc, 20.0, (1280, 720))
 
 while(cap.isOpened()):
     # Capture frame-by-frame
