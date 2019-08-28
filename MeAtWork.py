@@ -104,14 +104,14 @@ while True:
 
             break
 
-        # Display the resulting frame
- #       cv2.imshow('Video', frame)
+#        Display the resulting frame
+    cv2.imshow('Video', frame)
 
         # press any key to exit
         # NOTE;  x86 systems may need to remove: " 0xFF == ord('q')"
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
     # When everything is done, release the capture
-    cap.release()
-    cv2.destroyAllWindows()
+cap.release()
+cv2.destroyAllWindows()
