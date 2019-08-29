@@ -5,13 +5,8 @@ faceCascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_defau
 eyesCascade = cv2.CascadeClassifier('cascades/third-party/frontalEyes35x16.xml')
 noseCascade = cv2.CascadeClassifier('cascades/third-party/Nose18x15.xml')
 
-# Load our overlay image: mustache.png
 imgMustache = cv2.imread(r'images/fun/mustache.png', -1)
-
-# Create the mask for the mustache
 orig_mask = imgMustache[:, :, 3]
-
-# Create the inverted mask for the mustache
 orig_mask_inv = cv2.bitwise_not(orig_mask)
 
 # Convert mustache image to BGR
@@ -19,20 +14,13 @@ orig_mask_inv = cv2.bitwise_not(orig_mask)
 imgMustache = imgMustache[:, :, 0:3]
 origMustacheHeight, origMustacheWidth = imgMustache.shape[:2]
 
-# -----------------------------------------------------------------------------
-#       Main program loop
-# -----------------------------------------------------------------------------
 
-# collect video input from first webcam on system
 cap = cv2.VideoCapture(0)
 
 while True:
-    # Capture video feed
     ret, frame = cap.read()
-
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # Detect faces in input video stream
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=1.1,
@@ -41,10 +29,9 @@ while True:
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
-    # Iterate over each face found
     for (x, y, w, h) in faces:
         # Un-comment the next line for debug (draw box around all faces)
-        # face = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
+        face = cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
         roi_gray = gray[y:y + h, x:x + w]
         roi_color = frame[y:y + h, x:x + w]
@@ -104,14 +91,9 @@ while True:
 
             break
 
-#        Display the resulting frame
     cv2.imshow('Video', frame)
-
-        # press any key to exit
-        # NOTE;  x86 systems may need to remove: " 0xFF == ord('q')"
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-    # When everything is done, release the capture
 cap.release()
 cv2.destroyAllWindows()
