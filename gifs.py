@@ -1,32 +1,29 @@
 import dlib
 from PIL import Image
-import argparse
-
 from imutils import face_utils
 import numpy as np
-
 import moviepy.editor as mpy
+import sys
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-image", required=True, help="path to input image")
-args = parser.parse_args()
+# resize to a max_width to keep gif size small
+MAX_WIDTH = 500
 
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68.dat')
 
-# resize to a max_width to keep gif size small
-max_width = 500
+try:
+    image = sys.argv[1]
+except (IndexError):
+    print('\nUsage:\n python gifs.py image.jpg (or .png)')
+    sys.exit()
 
-# open our image, convert to rgba
-img = Image.open(args.image).convert('RGBA')
-
-# two images we'll need, glasses and deal with it text
+img = Image.open(image).convert('RGBA')
 deal = Image.open("deals.png")
 text = Image.open('text.png')
 
-if img.size[0] > max_width:
-    scaled_height = int(max_width * img.size[1] / img.size[0])
-    img.thumbnail((max_width, scaled_height))
+if img.size[0] > MAX_WIDTH:
+    scaled_height = int(MAX_WIDTH * img.size[1] / img.size[0])
+    img.thumbnail((MAX_WIDTH, scaled_height))
 
 img_gray = np.array(img.convert('L')) # need grayscale for dlib face detection
 
@@ -35,11 +32,10 @@ rects = detector(img_gray, 0)
 if len(rects) == 0:
     print("No faces found, exiting.")
     exit()
-
-print("%i faces found in source image. processing into gif now." % len(rects))
+else:
+    print("{0} face{1} found in source image. processing into gif now.".format(len(rects), "s" if len(rects) != 1 else ""))
 
 faces = []
-
 for rect in rects:
     face = {}
     print(rect.top(), rect.right(), rect.bottom(), rect.left())
@@ -72,13 +68,13 @@ for rect in rects:
     # add the scaled image to a list, shift the final position to the
     # left of the leftmost eye
     face['glasses_image'] = current_deal
-    left_eye_x = leftEye[0,0] - shades_width // 4
-    left_eye_y = leftEye[0,1] - shades_width // 6
+    left_eye_x = leftEye[0, 0] - shades_width // 4
+    left_eye_y = leftEye[0, 1] - shades_width // 6
     face['final_pos'] = (left_eye_x, left_eye_y)
     faces.append(face)
 
 # how long our gif should be
-duration = 4
+duration = 5
 
 def make_frame(t):
     draw_img = img.convert('RGBA') # returns copy of original image
@@ -90,10 +86,10 @@ def make_frame(t):
         if t <= duration - 2:
             current_x = int(face['final_pos'][0])
             current_y = int(face['final_pos'][1] * t / (duration - 2))
-            draw_img.paste(face['glasses_image'], (current_x, current_y) , face['glasses_image'])
+            draw_img.paste(face['glasses_image'], (current_x, current_y), face['glasses_image'])
         else:
             draw_img.paste(face['glasses_image'], face['final_pos'], face['glasses_image'])
-            draw_img.paste(text, (75, draw_img.height // 2 - 32), text)
+            draw_img.paste(text, (75, draw_img.height // 2 + 50), text)
 
     return np.asarray(draw_img)
 
