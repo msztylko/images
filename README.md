@@ -1,4 +1,4 @@
-# me-at-work
+# Images
 
 The aim of this short project is to get familiar with OpenCV library and using Python for image manipulation. I'm going to create a timelapse of me working recorded with my computer camera. Let's see how it works out!
 
@@ -6,7 +6,7 @@ The aim of this short project is to get familiar with OpenCV library and using P
  
 My initial plan was to do face detection using Haar Cascades, but it doesn't seem to work very well. This solution highly depends on the position of my head and I decided to use tools from dlib library. However, I have problems with installing this library on Windows 10 and I'll probably spent the rest of this day trying to make it work...
 
-Dlib finally installed 19.17.0 after downloading VSC with CMake and C++ compilers
+Dlib 19.17.0 finally installed  after downloading VSC with CMake and C++ compilers.
 
  *Update 30/08/2019*
  
